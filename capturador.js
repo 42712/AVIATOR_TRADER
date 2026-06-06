@@ -179,7 +179,7 @@ conectarWS();
 setInterval(tentarScraperTipMiner, 30000);
 tentarScraperTipMiner();
 
-// Status a cada 5 min
+// Keep-alive: ping a cada 3 min pra evitar spindown do Render
 setInterval(() => {
   https.get(API_URL.replace('/api/nova-vela', '/api/status'), (res) => {
     let data = '';
@@ -187,11 +187,11 @@ setInterval(() => {
     res.on('end', () => {
       try {
         const json = JSON.parse(data);
-        log(`📊 Status servidor: ${json.total_velas} velas | Uptime: ${json.uptime}`);
+        log(`📊 Status: ${json.total_velas} velas | ${json.uptime}`);
       } catch (e) {}
     });
   }).on('error', () => {});
-}, 5 * 60 * 1000);
+}, 3 * 60 * 1000);
 
 // Keep alive
 process.on('uncaughtException', (err) => {

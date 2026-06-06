@@ -1,13 +1,27 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Banco de dados em memória
+const DATA_FILE = path.join(__dirname, 'velas.json');
+
+// Carrega dados salvos
 let velas = [];
 let startTime = Date.now();
+try {
+  if (fs.existsSync(DATA_FILE)) {
+    velas = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+    console.log(`📂 ${velas.length} velas carregadas do disco`);
+  }
+} catch(e) { console.log('⚠️ Erro ao carregar velas.json'); }
+
+function salvarVelas() {
+  try { fs.writeFileSync(DATA_FILE, JSON.stringify(velas.slice(-5000)), 'utf8'); } catch(e) {}
+}
 
 // ============================================
 // ENDPOINTS DA API
@@ -37,6 +51,8 @@ app.post('/api/nova-vela', (req, res) => {
     
     // Mantém só as últimas 5000 velas
     if (velas.length > 5000) velas.shift();
+    
+    salvarVelas();
     
     console.log(`[${new Date().toLocaleTimeString()}] 📊 Vela: ${novaVela.multiplicador}x | Painel ${novaVela.painel} | Rodada ${novaVela.rodada}`);
     res.json({ 
@@ -182,6 +198,7 @@ app.delete('/api/limpar', (req, res) => {
     
     const removidas = velas.length;
     velas = [];
+    salvarVelas();
     res.json({ 
         ok: true, 
         mensagem: `${removidas} velas removidas do histórico`,

@@ -11,4 +11,4 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 setInterval(() => {
   fetch("https://aviator-trader-v2.onrender.com/api/status").catch(() => {});
-}, 4 * 60 * 1000);
+}, 2 * 60 * 1000);
