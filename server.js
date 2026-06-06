@@ -82,7 +82,7 @@ app.get('/api/velas', (req, res) => {
         total,
         limit: parseInt(limit),
         offset: parseInt(offset),
-        dados: paginado
+        velas: paginado  // Fix: era 'dados', painel espera 'velas'
     });
 });
 
