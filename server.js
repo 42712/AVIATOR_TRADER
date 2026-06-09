@@ -9,6 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname)));
 
 const DATA_FILE = path.join(__dirname, 'velas.json');
 const WS_URL = 'wss://apiglobal.appbackend.tech/ws/signals/v2/aviator';
@@ -305,13 +306,18 @@ app.delete('/api/limpar', (req, res) => {
 });
 
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'painel_vr5_v16.html'));
+});
+
+app.get('/api', (req, res) => {
     res.json({
         nome: 'API Aviator Trader - 100% Online',
         versao: '2.0.0',
         status: 'online',
         capturador: 'WebSocket + TipMiner integrados',
         endpoints: {
-            'GET /': 'Esta documentação',
+            'GET /': 'Painel/Gráfico',
+            'GET /api': 'Esta documentação',
             'GET /api/status': 'Status do servidor',
             'GET /api/velas?painel=1&limit=100': 'Lista velas',
             'GET /api/ultimas?n=10': 'Últimas N velas',
