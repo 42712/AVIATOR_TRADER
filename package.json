@@ -1,13 +1,14 @@
 {
   "name": "aviator-trader-backend",
-  "version": "1.0.0",
-  "description": "API para captura de velas do Aviator - Sortenabet",
+  "version": "2.0.0",
+  "description": "API 100% Online para captura de velas do Aviator - Sortenabet (WebSocket + TipMiner integrados)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "ws": "^8.16.0"
   }
 }

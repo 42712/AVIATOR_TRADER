@@ -3,7 +3,7 @@ const https = require('https');
 const http = require('http');
 
 const WS_URL = 'wss://apiglobal.appbackend.tech/ws/signals/v2/aviator';
-const API_URL = 'https://aviator-trader-v2.onrender.com/api/nova-vela';
+const API_URL = 'https://aviator-trader-1.onrender.com/api/nova-vela';
 
 const enviadas = new Set();
 let rodadaCache = null;
@@ -92,7 +92,13 @@ function conectarWS() {
         return;
       }
 
-      if (msg.casa !== 'sortenabet') return;
+      // Fix: loga casa desconhecida em vez de silenciar
+      if (msg.casa && msg.casa !== 'sortenabet') {
+        log(`⚠️ Casa ignorada: ${msg.casa}`);
+        return;
+      }
+      // Se não tem 'casa' nem valor, descarta
+      if (!msg.casa && !msg.data?.valor) return;
 
       const mult = parseFloat(msg.data?.valor);
       if (isNaN(mult) || mult <= 0) return;
