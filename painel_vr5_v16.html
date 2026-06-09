@@ -1333,7 +1333,8 @@ function draw(){
             const mediaDepois=depois.reduce((a,b)=>a+b,0)/depois.length;
             // Fundo: valor abaixo da média anterior e sobe depois
             if(v<mediaAntes*0.95 && mediaDepois>v*1.03){
-              const temRosaProxima=pts.slice(i+1,Math.min(pts.length,i+9)).some(p=>p.val>=10);
+              // Fundo deve ser EXATAMENTE 1 vela antes da rosa (10x+ nas próximas 2 velas)
+              const temRosaProxima=pts.slice(i+1,Math.min(pts.length,i+3)).some(p=>p.val>=10);
               todosFundos.push({index:i,val:v,isDeep:v<1.6,temRosa:temRosaProxima});
             }
           }
