@@ -526,64 +526,39 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-famil
 <!-- MODAL INDICADORES -->
 <div class="modal-bg" id="indModal" onclick="if(event.target===this)closeIndicadores()">
   <div class="modal" style="width:380px">
-    <div class="m-title">&#9965; Indicadores <span class="m-x" onclick="closeIndicadores()">&#10005;</span></div>
+    <div class="m-title">&#9965; Médias Móveis - Fundos de Reversão <span class="m-x" onclick="closeIndicadores()">&#10005;</span></div>
 
-    <div style="font-size:8px;color:var(--am);letter-spacing:.8px;margin:6px 0 4px">MÉDIAS MÓVEIS</div>
+    <div style="font-size:8px;color:var(--am);letter-spacing:.8px;margin:6px 0 4px">MÉDIAS MÓVEIS CONFIGURADAS</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
-      <div id="ind-mm1" style="flex:1;min-width:100px;background:var(--bg3);border:1px solid var(--brd2);border-radius:6px;padding:8px 10px;cursor:pointer" onclick="closeThenOpenMM()">
-        <div style="font-size:9px;color:var(--am);font-weight:700">MM1 (EMA <span id="ind-mm1per">9</span>)</div>
-        <div style="font-size:8px;color:var(--txt2);margin-top:3px">Smooth · Tracejada</div>
-        <div style="font-size:8px;color:var(--gn);margin-top:2px" id="ind-mm1st">✓ Ativa</div>
+      <div id="ind-mm1" style="flex:1;min-width:100px;background:var(--bg3);border:2px solid #eab308;border-radius:6px;padding:8px 10px;">
+        <div style="font-size:9px;color:#eab308;font-weight:700">MM Amarela</div>
+        <div style="font-size:8px;color:var(--txt2);margin-top:3px">Arco de virada nos fundos</div>
+        <div style="font-size:8px;color:var(--gn);margin-top:2px">Período: 5</div>
       </div>
-      <div id="ind-mm2" style="flex:1;min-width:100px;background:var(--bg3);border:1px solid var(--brd2);border-radius:6px;padding:8px 10px;cursor:pointer" onclick="closeThenOpenMM()">
-        <div style="font-size:9px;color:var(--dn);font-weight:700">MM2 (EMA <span id="ind-mm2per">21</span>)</div>
-        <div style="font-size:8px;color:var(--txt2);margin-top:3px">Linear · Tracejada</div>
-        <div style="font-size:8px;color:var(--gn);margin-top:2px" id="ind-mm2st">✓ Ativa</div>
+      <div id="ind-mm2" style="flex:1;min-width:100px;background:var(--bg3);border:2px solid #3b82f6;border-radius:6px;padding:8px 10px;">
+        <div style="font-size:9px;color:#3b82f6;font-weight:700">MM Azul</div>
+        <div style="font-size:8px;color:var(--txt2);margin-top:3px">Linha reta pelos fundos</div>
+        <div style="font-size:8px;color:var(--gn);margin-top:2px">Tracejada linear</div>
       </div>
-      <div id="ind-mm3" style="flex:1;min-width:100px;background:var(--bg3);border:1px solid var(--brd2);border-radius:6px;padding:8px 10px;cursor:pointer" onclick="closeThenOpenMM()">
-        <div style="font-size:9px;color:var(--gn);font-weight:700">MM3 (EMA <span id="ind-mm3per">50</span>)</div>
-        <div style="font-size:8px;color:var(--txt2);margin-top:3px">Bezier · Pontilhada</div>
-        <div style="font-size:8px;color:var(--pk);margin-top:2px" id="ind-mm3st">✗ Inativa</div>
+      <div id="ind-mm3" style="flex:1;min-width:100px;background:var(--bg3);border:2px solid #22c55e;border-radius:6px;padding:8px 10px;">
+        <div style="font-size:9px;color:#22c55e;font-weight:700">MM Verde</div>
+        <div style="font-size:8px;color:var(--txt2);margin-top:3px">Fundos profundos</div>
+        <div style="font-size:8px;color:var(--gn);margin-top:2px">Onde azul não alcança</div>
       </div>
     </div>
 
-    <div style="font-size:8px;color:var(--up);letter-spacing:.8px;margin:6px 0 4px">ZONAS DE PREÇO</div>
-    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
-      <label style="display:flex;align-items:center;gap:8px;font-size:9px;color:var(--txt2)">
-        <input type="checkbox" id="zona1x" checked onchange="draw()"> Zona 1.00x (BASE)
-      </label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:9px;color:var(--txt2)">
-        <input type="checkbox" id="zona2x" checked onchange="draw()"> Zona 2.00x (ROXO)
-      </label>
-      <label style="display:flex;align-items:center;gap:8px;font-size:9px;color:var(--txt2)">
-        <input type="checkbox" id="zona10x" checked onchange="draw()"> Zona 10.00x (ROSA)
-      </label>
-    </div>
-
-    <div style="font-size:8px;color:var(--pk);letter-spacing:.8px;margin:6px 0 4px">SINAL DE ENTRADA — PADRÃO MM</div>
+    <div style="font-size:8px;color:var(--pk);letter-spacing:.8px;margin:6px 0 4px">ALERTA DE FUNDO DE REVERSÃO</div>
     <div style="font-size:9px;color:var(--txt2);line-height:1.7;background:var(--bg3);border-radius:5px;padding:8px 10px;border:1px solid var(--brd)">
-      Detecta quando MM rápida <b style="color:var(--gn)">cruza para cima</b> a MM lenta<br>
-      após uma sequência de queda (fundo).<br>
+      Alerta quando a MM Azul ou Verde toca um <b style="color:var(--gn)">fundo real</b> de reversão.<br>
+      Não dispara em falsos fundos ou mudanças de tendência.<br>
       <label style="display:flex;align-items:center;gap:6px;margin-top:6px">
         <input type="checkbox" id="sinalMMOn" checked onchange="CFG.sinalMMOn=this.checked;salvarConfig()">
-        <span>Ativar alerta de entrada</span>
-      </label>
-    </div>
-
-    <div style="font-size:8px;color:#f472b6;letter-spacing:.8px;margin:6px 0 4px">MM2 ADAPTATIVA — CALIBRAÇÃO POR COMPRESSÃO</div>
-    <div style="font-size:9px;color:var(--txt2);line-height:1.7;background:var(--bg3);border-radius:5px;padding:8px 10px;border:1px solid var(--brd)">
-      A MM2 <b style="color:#f472b6">auto-calibra</b> com a compressão do mercado:<br>
-      &bull; Curva fica <b>mais grossa</b> e <b>brilhante</b><br>
-      &bull; Cor transita de ciano para <b style="color:#f472b6">rosa</b><br>
-      &bull; Prevê vela rosa com <b>2+ rodadas</b> de antecedência<br>
-      <label style="display:flex;align-items:center;gap:6px;margin-top:6px">
-        <input type="checkbox" id="sinalMM2Adaptive" checked onchange="CFG.mm2Adaptive=this.checked;salvarConfig();draw()">
-        <span>Ativar MM2 adaptativa</span>
+        <span>Ativar alerta de fundo</span>
       </label>
     </div>
 
     <div class="m-btns" style="margin-top:10px">
-      <button class="mbtn mb-g" onclick="closeThenOpenMM()">&#9881; Config MM</button>
+      <button class="mbtn mb-g" onclick="closeThenOpenMM()">&#9881; Configurar MMs</button>
       <button class="mbtn mb-c" onclick="closeIndicadores()">Fechar</button>
     </div>
   </div>
@@ -594,37 +569,37 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-famil
   <div class="modal" style="width:380px">
     <div class="m-title">&#9881; Configurar Médias Móveis <span class="m-x" onclick="closeCfgMM()">&#10005;</span></div>
 
-    <!-- MM1 -->
-    <div style="font-size:8px;color:var(--am);letter-spacing:.8px;margin-top:6px;padding-bottom:4px;border-bottom:1px solid var(--brd)">MÉDIA MÓVEL 1</div>
+    <!-- MM1 Amarela -->
+    <div style="font-size:8px;color:#eab308;letter-spacing:.8px;margin-top:6px;padding-bottom:4px;border-bottom:1px solid var(--brd)">MÉDIA MÓVEL AMARELA — Arco de Virada</div>
     <div class="mm-row"><span class="mm-label">Ativar</span><div class="mm-toggle on" id="mm1tog" onclick="mmToggle(1)"></div></div>
-    <div class="mm-row"><span class="mm-label">Período</span><input type="number" class="mm-num" id="mm1per" value="9" min="2" max="500"><span style="font-size:8px;color:var(--txt3);margin-left:4px">períodos</span></div>
-    <div class="mm-row"><span class="mm-label">Cor</span><input type="color" class="mm-color" id="mm1cor" value="#f59e0b"><span class="mm-label" style="margin-left:10px">Opacidade</span><input type="number" class="mm-op" id="mm1op" value="0.80" min="0.1" max="1" step="0.05"></div>
+    <div class="mm-row"><span class="mm-label">Período</span><input type="number" class="mm-num" id="mm1per" value="5" min="2" max="500"><span style="font-size:8px;color:var(--txt3);margin-left:4px">períodos</span></div>
+    <div class="mm-row"><span class="mm-label">Cor</span><input type="color" class="mm-color" id="mm1cor" value="#eab308"><span class="mm-label" style="margin-left:10px">Opacidade</span><input type="number" class="mm-op" id="mm1op" value="0.85" min="0.1" max="1" step="0.05"></div>
     <div class="mm-row">
-      <span class="mm-label">Espessura</span><input type="number" class="mm-num" id="mm1lw" value="1.5" min="0.5" max="5" step="0.5"><span style="font-size:8px;color:var(--txt3);margin-left:4px">px</span>
+      <span class="mm-label">Espessura</span><input type="number" class="mm-num" id="mm1lw" value="2.0" min="0.5" max="5" step="0.5"><span style="font-size:8px;color:var(--txt3);margin-left:4px">px</span>
       <span class="mm-label" style="margin-left:10px">Traçado</span>
       <select id="mm1dash" class="mm-sel"><option value="solid">Sólida</option><option value="dash" selected>Tracejada</option><option value="dot">Pontilhada</option></select>
     </div>
     <div class="mm-row"><span class="mm-label">Tipo curva</span><select id="mm1curva" class="mm-sel" style="flex:1"><option value="linear">Linear (reta)</option><option value="smooth" selected>Smooth (suave)</option><option value="bezier">Bezier</option><option value="step">Step (degrau)</option></select></div>
 
-    <!-- MM2 -->
-    <div style="font-size:8px;color:var(--dn);letter-spacing:.8px;margin-top:8px;padding-bottom:4px;border-bottom:1px solid var(--brd)">MÉDIA MÓVEL 2</div>
+    <!-- MM2 Azul -->
+    <div style="font-size:8px;color:#3b82f6;letter-spacing:.8px;margin-top:8px;padding-bottom:4px;border-bottom:1px solid var(--brd)">MÉDIA MÓVEL AZUL — Linha Reta dos Fundos</div>
     <div class="mm-row"><span class="mm-label">Ativar</span><div class="mm-toggle on" id="mm2tog" onclick="mmToggle(2)"></div></div>
-    <div class="mm-row"><span class="mm-label">Período</span><input type="number" class="mm-num" id="mm2per" value="21" min="2" max="500"><span style="font-size:8px;color:var(--txt3);margin-left:4px">períodos</span></div>
-    <div class="mm-row"><span class="mm-label">Cor</span><input type="color" class="mm-color" id="mm2cor" value="#06b6d4"><span class="mm-label" style="margin-left:10px">Opacidade</span><input type="number" class="mm-op" id="mm2op" value="0.55" min="0.1" max="1" step="0.05"></div>
+    <div class="mm-row"><span class="mm-label">Período</span><input type="number" class="mm-num" id="mm2per" value="14" min="2" max="500"><span style="font-size:8px;color:var(--txt3);margin-left:4px">períodos</span></div>
+    <div class="mm-row"><span class="mm-label">Cor</span><input type="color" class="mm-color" id="mm2cor" value="#3b82f6"><span class="mm-label" style="margin-left:10px">Opacidade</span><input type="number" class="mm-op" id="mm2op" value="0.75" min="0.1" max="1" step="0.05"></div>
     <div class="mm-row">
-      <span class="mm-label">Espessura</span><input type="number" class="mm-num" id="mm2lw" value="1.2" min="0.5" max="5" step="0.5"><span style="font-size:8px;color:var(--txt3);margin-left:4px">px</span>
+      <span class="mm-label">Espessura</span><input type="number" class="mm-num" id="mm2lw" value="2.0" min="0.5" max="5" step="0.5"><span style="font-size:8px;color:var(--txt3);margin-left:4px">px</span>
       <span class="mm-label" style="margin-left:10px">Traçado</span>
       <select id="mm2dash" class="mm-sel"><option value="solid">Sólida</option><option value="dash" selected>Tracejada</option><option value="dot">Pontilhada</option></select>
     </div>
     <div class="mm-row"><span class="mm-label">Tipo curva</span><select id="mm2curva" class="mm-sel" style="flex:1"><option value="linear" selected>Linear (reta)</option><option value="smooth">Smooth (suave)</option><option value="bezier">Bezier</option><option value="step">Step (degrau)</option></select></div>
 
-    <!-- MM3 -->
-    <div style="font-size:8px;color:var(--gn);letter-spacing:.8px;margin-top:8px;padding-bottom:4px;border-bottom:1px solid var(--brd)">MÉDIA MÓVEL 3 (extra)</div>
-    <div class="mm-row"><span class="mm-label">Ativar</span><div class="mm-toggle" id="mm3tog" onclick="mmToggle(3)"></div></div>
-    <div class="mm-row"><span class="mm-label">Período</span><input type="number" class="mm-num" id="mm3per" value="50" min="2" max="500"><span style="font-size:8px;color:var(--txt3);margin-left:4px">períodos</span></div>
-    <div class="mm-row"><span class="mm-label">Cor</span><input type="color" class="mm-color" id="mm3cor" value="#22c55e"><span class="mm-label" style="margin-left:10px">Opacidade</span><input type="number" class="mm-op" id="mm3op" value="0.50" min="0.1" max="1" step="0.05"></div>
+    <!-- MM3 Verde -->
+    <div style="font-size:8px;color:#22c55e;letter-spacing:.8px;margin-top:8px;padding-bottom:4px;border-bottom:1px solid var(--brd)">MÉDIA MÓVEL VERDE — Fundos Profundos</div>
+    <div class="mm-row"><span class="mm-label">Ativar</span><div class="mm-toggle on" id="mm3tog" onclick="mmToggle(3)"></div></div>
+    <div class="mm-row"><span class="mm-label">Período</span><input type="number" class="mm-num" id="mm3per" value="34" min="2" max="500"><span style="font-size:8px;color:var(--txt3);margin-left:4px">períodos</span></div>
+    <div class="mm-row"><span class="mm-label">Cor</span><input type="color" class="mm-color" id="mm3cor" value="#22c55e"><span class="mm-label" style="margin-left:10px">Opacidade</span><input type="number" class="mm-op" id="mm3op" value="0.65" min="0.1" max="1" step="0.05"></div>
     <div class="mm-row">
-      <span class="mm-label">Espessura</span><input type="number" class="mm-num" id="mm3lw" value="1.0" min="0.5" max="5" step="0.5"><span style="font-size:8px;color:var(--txt3);margin-left:4px">px</span>
+      <span class="mm-label">Espessura</span><input type="number" class="mm-num" id="mm3lw" value="1.8" min="0.5" max="5" step="0.5"><span style="font-size:8px;color:var(--txt3);margin-left:4px">px</span>
       <span class="mm-label" style="margin-left:10px">Traçado</span>
       <select id="mm3dash" class="mm-sel"><option value="solid">Sólida</option><option value="dash">Tracejada</option><option value="dot" selected>Pontilhada</option></select>
     </div>
@@ -701,33 +676,33 @@ const CFG = {
   showN: 60,
   showMA: true,
   sinalMMOn: true,
-  // MM1 — âmbar, Smooth, Tracejada
+  // MM1 — Amarela (arco de virada nos fundos)
   mm1On:   true,
-  mm1Per:  9,
-  mm1Cor:  '#f59e0b',
-  mm1Op:   0.80,
-  mm1Lw:   1.5,
+  mm1Per:  5,
+  mm1Cor:  '#eab308',
+  mm1Op:   0.85,
+  mm1Lw:   2.0,
   mm1Dash: [4,5],
   mm1Curva: 'smooth',
-  // MM2 — ciano, Linear, Tracejada
+  // MM2 — Azul tracejada (linha reta pelos fundos de reversão)
   mm2On:   true,
-  mm2Per:  21,
-  mm2Cor:  '#06b6d4',
-  mm2Op:   0.55,
-  mm2Lw:   1.2,
-  mm2Dash: [4,5],
+  mm2Per:  14,
+  mm2Cor:  '#3b82f6',
+  mm2Op:   0.75,
+  mm2Lw:   2.0,
+  mm2Dash: [8,4],
   mm2Curva: 'linear',
-  // MM3 — verde, Bezier, Pontilhada (desligada por padrão)
-  mm3On:   false,
-  mm3Per:  50,
+  // MM3 — Verde (fundo profundo onde azul não alcança)
+  mm3On:   true,
+  mm3Per:  34,
   mm3Cor:  '#22c55e',
-  mm3Op:   0.50,
-  mm3Lw:   1.0,
-  mm3Dash: [2,4],
+  mm3Op:   0.65,
+  mm3Lw:   1.8,
+  mm3Dash: [3,4],
   mm3Curva: 'bezier',
-  // MM2 adaptativa — calibra automaticamente com compressão
-  mm2Adaptive: true,
-  mm2CompBoost: 1.0,
+  // Alertas de fundo
+  alertaFundo: true,
+  alertaAudio: true,
 };
 
 // Zoom / Pan horizontal
@@ -1441,129 +1416,243 @@ function draw(){
     }
   });
 
-  // MÉDIAS MÓVEIS (pré-calculadas sobre todos pts)
-  // MÉDIAS MÓVEIS — 3 MMs configuráveis, pré-calculadas sobre todos pts
+  // MÉDIAS MÓVEIS — 3 MMs com detecção de fundos de reversão
   if(CFG.showMA && pts.length>=3){
     const allVals=pts.map(p=>yVal(p));
     const subStart=Math.max(0,pts.length-viewOffset-sub.length);
-
-    // Converte hex+alpha para rgba
     const hexToRgb=h=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return r+','+g+','+b;};
 
-    // Função de desenho por tipo de curva
-    function drawMmCurve(slice, curva){
-      const n=slice.length;
-      if(n<2) return;
-      ctx.beginPath();
-      if(curva==='linear'){
-        // Linha reta entre pontos
-        slice.forEach((ev,i)=>i===0?ctx.moveTo(sx(i),sy(ev)):ctx.lineTo(sx(i),sy(ev)));
-      } else if(curva==='smooth'){
-        // Bezier suavizado (tension=0.35)
-        ctx.moveTo(sx(0),sy(slice[0]));
-        for(let i=0;i<n-1;i++){
-          const x0=sx(Math.max(0,i-1)), y0=sy(slice[Math.max(0,i-1)]);
-          const x1=sx(i),              y1=sy(slice[i]);
-          const x2=sx(i+1),            y2=sy(slice[i+1]);
-          const x3=sx(Math.min(n-1,i+2)), y3=sy(slice[Math.min(n-1,i+2)]);
-          const t=0.35;
-          const cp1x=x1+(x2-x0)*t, cp1y=y1+(y2-y0)*t;
-          const cp2x=x2-(x3-x1)*t, cp2y=y2-(y3-y1)*t;
-          ctx.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x2,y2);
-        }
-      } else if(curva==='bezier'){
-        // Bezier simples (curva quadrática suave)
-        ctx.moveTo(sx(0),sy(slice[0]));
-        for(let i=0;i<n-1;i++){
-          const cpx=(sx(i)+sx(i+1))/2;
-          const cpy=(sy(slice[i])+sy(slice[i+1]))/2;
-          ctx.quadraticCurveTo(sx(i),sy(slice[i]),cpx,cpy);
-        }
-        ctx.lineTo(sx(n-1),sy(slice[n-1]));
-      } else if(curva==='step'){
-        // Degrau (step)
-        ctx.moveTo(sx(0),sy(slice[0]));
-        for(let i=1;i<n;i++){
-          ctx.lineTo(sx(i),sy(slice[i-1])); // horizontal
-          ctx.lineTo(sx(i),sy(slice[i]));   // vertical
+    // ═══════════ DETECÇÃO DE FUNDOS DE REVERSÃO ═══════════
+    function detectarFundos(){
+      const fundos=[];
+      for(let i=5;i<pts.length-3;i++){
+        const v=pts[i].val;
+        const vizinhos=pts.slice(i-5,i+6).map(p=>p.val);
+        const minViz=Math.min(...vizinhos);
+        if(v===minViz && v<=1.05*vizinhos.filter((_,j)=>j!==5).reduce((a,b)=>Math.min(a,b),999)){
+          const antes=pts.slice(Math.max(0,i-8),i).map(p=>p.val);
+          const depois=pts.slice(i+1,Math.min(pts.length,i+6)).map(p=>p.val);
+          const mediaAntes=antes.reduce((a,b)=>a+b,0)/antes.length;
+          const mediaDepois=depois.reduce((a,b)=>a+b,0)/depois.length;
+          if(v<mediaAntes*0.92 && mediaDepois>v*1.03){
+            fundos.push({index:i,val:v,isDeep:v<1.6});
+          }
         }
       }
-      ctx.stroke();
+      return fundos;
     }
 
-    // Calcula compressão atual para MM2 adaptativa
-    previsaoRosa = predictRosa();
-    ultimaCompressao = previsaoRosa.compressao;
-    const comp = ultimaCompressao;
-    const boost = CFG.mm2CompBoost || 1.0;
+    const fundos=detectarFundos();
 
-    // Atualiza sidebar com info de compressão
-    const elComp = document.getElementById('sCompVal');
-    if(elComp) elComp.textContent = (comp*100).toFixed(0)+'%';
-    const elRosa = document.getElementById('sRosaProb');
-    if(elRosa) elRosa.textContent = previsaoRosa.velas>0 ? previsaoRosa.velas+'v' : '—';
+    // ═══════════ MM AZUL — Linha reta tracejada pelos fundos ═══════════
+    function desenharLinhaAzul(){
+      if(!CFG.mm2On||fundos.length<2) return;
+      const ultimosFundos=fundos.slice(-6);
+      if(ultimosFundos.length<2) return;
 
-    [{on:CFG.mm1On,per:CFG.mm1Per,cor:CFG.mm1Cor,op:CFG.mm1Op,lw:CFG.mm1Lw,dash:CFG.mm1Dash,curva:CFG.mm1Curva},
-     {on:CFG.mm2On,per:CFG.mm2Per,cor:CFG.mm2Cor,op:CFG.mm2Op,lw:CFG.mm2Lw,dash:CFG.mm2Dash,curva:CFG.mm2Curva, adaptive:true, idx:2},
-     {on:CFG.mm3On,per:CFG.mm3Per,cor:CFG.mm3Cor,op:CFG.mm3Op,lw:CFG.mm3Lw,dash:CFG.mm3Dash,curva:CFG.mm3Curva}
-    ].forEach(mm=>{
-      if(!mm.on||pts.length<mm.per) return;
-      const k=2/(mm.per+1);
+      let sx_sum=0,sy_sum=0,sxx_sum=0,sxy_sum=0;
+      const n=ultimosFundos.length;
+      ultimosFundos.forEach(f=>{
+        sx_sum+=f.index; sy_sum+=f.val;
+        sxx_sum+=f.index*f.index; sxy_sum+=f.index*f.val;
+      });
+      const slope=(n*sxy_sum-sx_sum*sy_sum)/(n*sxx_sum-sx_sum*sx_sum);
+      const intercept=(sy_sum-slope*sx_sum)/n;
+
+      const x0=ultimosFundos[0].index;
+      const xn=subStart+sub.length+5;
+      const y0=intercept+slope*x0;
+      const yn=intercept+slope*xn;
+
+      const px0=sx(x0-subStart);
+      const py0=sy(y0);
+      const pxn=sx(xn-subStart);
+      const pyn=sy(yn);
+
+      ctx.save();
+      ctx.setLineDash(CFG.mm2Dash);
+      ctx.strokeStyle='rgba('+hexToRgb(CFG.mm2Cor)+','+CFG.mm2Op+')';
+      ctx.lineWidth=CFG.mm2Lw;
+      ctx.shadowColor='rgba(59,130,246,0.4)';
+      ctx.shadowBlur=6;
+      ctx.beginPath();
+      ctx.moveTo(Math.max(px0,12),Math.max(py0,G2_CHART_TOP));
+      ctx.lineTo(Math.min(pxn,W-scaleW),Math.max(pyn,G2_CHART_TOP));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.shadowBlur=0;
+      ctx.restore();
+
+      // Marca cada fundo com círculo azul
+      ultimosFundos.forEach(f=>{
+        const fi=f.index-subStart;
+        if(fi>=0&&fi<sub.length){
+          const fx=sx(fi),fy=sy(f.val);
+          ctx.beginPath();ctx.arc(fx,fy,5,0,Math.PI*2);
+          ctx.fillStyle='rgba(59,130,246,0.6)';ctx.fill();
+          ctx.strokeStyle='rgba(59,130,246,0.9)';ctx.lineWidth=1.2;ctx.stroke();
+        }
+      });
+    }
+
+    // ═══════════ MM AMARELA — Arco de virada nos fundos ═══════════
+    function desenharLinhaAmarela(){
+      if(!CFG.mm1On||pts.length<CFG.mm1Per) return;
+      const k=2/(CFG.mm1Per+1);
       let e=allVals[0];
       const emaFull=allVals.map((v,i)=>{if(i>0)e=v*k+e*(1-k);return e;});
       const slice=emaFull.slice(subStart,Math.min(subStart+sub.length+5,emaFull.length));
 
-      // MM2 adaptativa: propriedades dinâmicas baseadas na compressão
-      let dynOp = mm.op, dynLw = mm.lw, dynCurva = mm.curva, dynCor = mm.cor;
-      if(mm.adaptive && CFG.mm2Adaptive && comp>0.15){
-        // Opacidade: aumenta com compressão (mais brilhante)
-        dynOp = Math.min(1, mm.op + comp*0.5*boost);
-        // Espessura: aumenta progressivamente (curva maior/grossa)
-        dynLw = Math.min(6, mm.lw + comp*4.0*boost);
-        // Curva: muda para bezier suave quando compressão > 40%
-        if(comp>0.4) dynCurva = 'bezier';
-        if(comp>0.6) dynCurva = 'smooth';
-        // Cor: transita de ciano para rosa conforme compressão aumenta
-        if(comp>0.5){
-          const t = Math.min(1, (comp-0.5)/0.5); // 0..1 quando comp 0.5..1.0
-          const hexToRgbRaw=h=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return {r,g,b};};
-          const cBase = hexToRgbRaw(mm.cor);     // ciano #06b6d4 → (6,182,212)
-          const cRosa = {r:244,g:114,b:182};      // rosa #f472b6
-          const r = Math.round(cBase.r + (cRosa.r-cBase.r)*t);
-          const g = Math.round(cBase.g + (cRosa.g-cBase.g)*t);
-          const b = Math.round(cBase.b + (cRosa.b-cBase.b)*t);
-          dynCor = '#' + [r,g,b].map(x=>Math.min(255,Math.max(0,x)).toString(16).padStart(2,'0')).join('');
+      ctx.save();
+      ctx.setLineDash(CFG.mm1Dash);
+      ctx.strokeStyle='rgba('+hexToRgb(CFG.mm1Cor)+','+CFG.mm1Op+')';
+      ctx.lineWidth=CFG.mm1Lw;
+      ctx.shadowColor='rgba(234,179,8,0.35)';
+      ctx.shadowBlur=4;
+
+      ctx.beginPath();
+      ctx.moveTo(sx(0),sy(slice[0]));
+      for(let i=1;i<slice.length-1;i++){
+        const x=sx(i),y=sy(slice[i]);
+        const x2=sx(i+1),y2=sy(slice[i+1]);
+        const cpx=(x+x2)/2,cpy=(y+y2)/2;
+        ctx.quadraticCurveTo(x,y,cpx,cpy);
+      }
+      if(slice.length>=2) ctx.lineTo(sx(slice.length-1),sy(slice[slice.length-1]));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.shadowBlur=0;
+      ctx.restore();
+
+      // Arco de virada no penúltimo fundo
+      if(fundos.length>=2){
+        const penult=fundos[fundos.length-2];
+        const fi=penult.index-subStart;
+        if(fi>=0&&fi<sub.length){
+          const fx=sx(fi),fy=sy(penult.val);
+          const arcSize=Math.max(18,(sy(1.0)-sy(5.0))*0.3);
+          ctx.save();
+          ctx.strokeStyle='rgba(234,179,8,0.7)';
+          ctx.lineWidth=2.5;
+          ctx.setLineDash([3,2]);
+          ctx.beginPath();
+          ctx.arc(fx,fy+arcSize*0.6,arcSize,Math.PI*0.7,Math.PI*2.3,false);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          // Ponta da seta para baixo
+          ctx.beginPath();
+          ctx.moveTo(fx,fy+arcSize*0.5);
+          ctx.lineTo(fx-8,fy+arcSize*1.2);
+          ctx.lineTo(fx+8,fy+arcSize*1.2);
+          ctx.closePath();
+          ctx.fillStyle='rgba(234,179,8,0.8)';
+          ctx.fill();
+          ctx.restore();
         }
       }
+    }
 
-      const corFinal=dynCor.startsWith('#')?'rgba('+hexToRgb(dynCor)+','+dynOp+')':dynCor;
+    // ═══════════ MM VERDE — Fundos profundos onde azul não alcança ═══════════
+    function desenharLinhaVerde(){
+      if(!CFG.mm3On) return;
+      const fundosProfundos=fundos.filter(f=>f.isDeep);
+      if(fundosProfundos.length<2) return;
 
-      // Glow na MM2 quando compressão alta
-      if(mm.adaptive && CFG.mm2Adaptive && comp>0.4){
-        ctx.save();
-        ctx.shadowColor = corFinal;
-        ctx.shadowBlur = comp*18*boost;
-        ctx.setLineDash(mm.dash);
-        ctx.strokeStyle=corFinal;
-        ctx.lineWidth=dynLw;
-        drawMmCurve(slice, dynCurva||'linear');
-        ctx.setLineDash([]);
-        ctx.restore();
-      }
+      const k=2/(CFG.mm3Per+1);
+      let e=allVals[0];
+      const emaFull=allVals.map((v,i)=>{if(i>0)e=v*k+e*(1-k);return e;});
+      const slice=emaFull.slice(subStart,Math.min(subStart+sub.length+5,emaFull.length));
 
-      ctx.setLineDash(mm.dash);
-      ctx.strokeStyle=corFinal;
-      ctx.lineWidth=dynLw;
-      drawMmCurve(slice, dynCurva||'linear');
+      ctx.save();
+      ctx.setLineDash(CFG.mm3Dash);
+      ctx.strokeStyle='rgba('+hexToRgb(CFG.mm3Cor)+','+CFG.mm3Op+')';
+      ctx.lineWidth=CFG.mm3Lw;
+      ctx.shadowColor='rgba(34,197,94,0.3)';
+      ctx.shadowBlur=4;
+      drawMmCurve(slice,CFG.mm3Curva);
       ctx.setLineDash([]);
-    });
+      ctx.shadowBlur=0;
+      ctx.restore();
 
-    // Roda o detector de sinal com os dados da MM
-    if(CFG.mm1On&&CFG.mm2On&&pts.length>=CFG.mm2Per){
-      const k1=2/(CFG.mm1Per+1),k2=2/(CFG.mm2Per+1);
-      let e1=allVals[0],e2=allVals[0];
-      const emaCheck=allVals.map((v,i)=>{if(i>0){e1=v*k1+e1*(1-k1);e2=v*k2+e2*(1-k2);}return{e1,e2};});
-      checkSinalEntrada(emaCheck, subStart);
+      // Marca fundos profundos com círculo verde
+      fundosProfundos.forEach(f=>{
+        const fi=f.index-subStart;
+        if(fi>=0&&fi<sub.length){
+          const fx=sx(fi),fy=sy(f.val);
+          ctx.beginPath();ctx.arc(fx,fy,6,0,Math.PI*2);
+          ctx.fillStyle='rgba(34,197,94,0.7)';ctx.fill();
+          ctx.strokeStyle='rgba(34,197,94,0.95)';ctx.lineWidth=1.5;ctx.stroke();
+        }
+      });
+    }
+
+    function drawMmCurve(slice,curva){
+      const n=slice.length;if(n<2)return;
+      ctx.beginPath();
+      if(curva==='linear'){
+        slice.forEach((ev,i)=>i===0?ctx.moveTo(sx(i),sy(ev)):ctx.lineTo(sx(i),sy(ev)));
+      }else if(curva==='smooth'){
+        ctx.moveTo(sx(0),sy(slice[0]));
+        for(let i=0;i<n-1;i++){
+          const x1=sx(i),y1=sy(slice[i]),x2=sx(i+1),y2=sy(slice[i+1]);
+          const cpx1=x1+(x2-x1)*0.35,cpy1=y1+(y2-y1)*0.35;
+          const cpx2=x2-(x2-x1)*0.35,cpy2=y2-(y2-y1)*0.35;
+          ctx.bezierCurveTo(cpx1,cpy1,cpx2,cpy2,x2,y2);
+        }
+      }else if(curva==='bezier'){
+        ctx.moveTo(sx(0),sy(slice[0]));
+        for(let i=0;i<n-1;i++){
+          const cpx=(sx(i)+sx(i+1))/2,cpy=(sy(slice[i])+sy(slice[i+1]))/2;
+          ctx.quadraticCurveTo(sx(i),sy(slice[i]),cpx,cpy);
+        }
+        ctx.lineTo(sx(n-1),sy(slice[n-1]));
+      }else if(curva==='step'){
+        ctx.moveTo(sx(0),sy(slice[0]));
+        for(let i=1;i<n;i++){ctx.lineTo(sx(i),sy(slice[i-1]));ctx.lineTo(sx(i),sy(slice[i]));}
+      }
+      ctx.stroke();
+    }
+
+    // Desenha as 3 linhas
+    desenharLinhaAzul();
+    desenharLinhaAmarela();
+    desenharLinhaVerde();
+
+    // ═══════════ ALERTA DE FUNDO DE REVERSÃO ═══════════
+    if(CFG.sinalMMOn&&CFG.alertaFundo&&fundos.length>0){
+      const ultimoFundo=fundos[fundos.length-1];
+      const fi=ultimoFundo.index-subStart;
+      if(fi>=0&&fi<sub.length){
+        const fx=sx(fi),fy=sy(ultimoFundo.val);
+        // Alerta visual no último fundo detectado
+        ctx.save();
+        const pulse=(Date.now()%2000)/2000;
+        const alpha=0.3+pulse*0.4;
+        ctx.shadowColor='rgba(34,197,94,'+alpha+')';
+        ctx.shadowBlur=14+pulse*8;
+        ctx.strokeStyle='rgba(34,197,94,'+(0.5+pulse*0.5)+')';
+        ctx.lineWidth=2;
+        ctx.setLineDash([4,2]);
+        ctx.beginPath();ctx.arc(fx,fy,10+pulse*4,0,Math.PI*2);ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.shadowBlur=0;
+        ctx.restore();
+
+        // Label FUNDO
+        ctx.fillStyle='#22c55e';
+        ctx.font='bold 8px JetBrains Mono,monospace';
+        ctx.textAlign='center';
+        ctx.fillText('FUNDO',fx,fy-16);
+
+        // Dispara alerta uma vez por fundo
+        const fundoKey='fundo_'+ultimoFundo.index;
+        if(!_alertasDisparados.has(fundoKey)){
+          _alertasDisparados.add(fundoKey);
+          if(_alertasDisparados.size>50) _alertasDisparados.clear();
+          showAlert('🔻 FUNDO DE REVERSÃO — '+ultimoFundo.val.toFixed(2)+'x','#22c55e',6000);
+          tocarAlerta();
+        }
+      }
     }
   }
 
@@ -1620,65 +1709,18 @@ function draw(){
     ctx.fillText('▲',x,y-18);
   });
 
-  // PREVISÃO ROSA — indicador de vela rosa prevista (MM2 adaptativa)
-  if(CFG.mm2Adaptive && CFG.mm2On && previsaoRosa.velas>0 && sub.length>previsaoRosa.velas){
-    const prob = previsaoRosa.prob;
-    const alvo = Math.min(previsaoRosa.velas, 5);
-    // Desenha zona de alerta rosa nos próximos N candles (espaços vazios à direita)
-    const lastX = sx(sub.length-1);
-    const step = (lastX - sx(0)) / (sub.length-1||1);
-    for(let v=1; v<=alvo; v++){
-      const px = lastX + v*step;
-      if(px > W-scaleW) break;
-      const alpha = 0.15 + (alvo-v+1)/alvo * 0.35;
-      const glowAlpha = 0.03 + (alvo-v+1)/alvo * 0.08;
-
-      // Glow de fundo rosa
-      ctx.fillStyle='rgba(244,114,182,'+glowAlpha+')';
-      ctx.fillRect(px-12, G2_CHART_TOP, 24, cH);
-
-      // Linha vertical tracejada rosa
-      ctx.setLineDash([3,6]);
-      ctx.strokeStyle='rgba(244,114,182,'+alpha+')';
-      ctx.lineWidth=1.2+(alvo-v+1)*0.5;
-      ctx.beginPath();ctx.moveTo(px,G2_CHART_TOP);ctx.lineTo(px,G2_CHART_TOP+cH);ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Badge contagem regressiva
-      const badgeY = G2_CHART_TOP + cH/2 - (alvo-1)*14 + (v-1)*28;
-      ctx.fillStyle='rgba(244,114,182,'+alpha+')';
-      ctx.beginPath();ctx.roundRect(px-16, badgeY-10, 32, 20, 5);ctx.fill();
-      ctx.fillStyle='#fff';ctx.font='bold 10px JetBrains Mono,monospace';ctx.textAlign='center';
-      ctx.fillText('R'+v, px, badgeY+4);
-
-      // Label "ROSA?" no primeiro
-      if(v===1){
-        ctx.fillStyle='rgba(244,114,182,'+(alpha+0.2)+')';
-        ctx.font='bold 8px JetBrains Mono,monospace';
-        ctx.fillText('ROSA?', px, badgeY-16);
-      }
-    }
-
-    // Barra de progresso da compressão no topo da área de desenho
-    if(ultimaCompressao>0.3){
-      const barW = (W-12-scaleW-20) * Math.min(1, ultimaCompressao);
-      const barH = 6;
-      const barX = 16;
-      const barY = G2_CHART_TOP + 4;
-      // Fundo
-      ctx.fillStyle='rgba(0,0,0,0.4)';
-      ctx.fillRect(barX-2, barY-2, (W-12-scaleW-20)+4, barH+4);
-      // Gradiente: ciano → rosa baseado na compressão
-      const grad = ctx.createLinearGradient(barX,0,barX+barW,0);
-      grad.addColorStop(0,'#06b6d4');
-      grad.addColorStop(0.5,'#a855f7');
-      grad.addColorStop(1,'#f472b6');
-      ctx.fillStyle=grad;
-      ctx.fillRect(barX, barY, barW, barH);
-      // Label
-      ctx.fillStyle='rgba(255,255,255,0.6)';ctx.font='7px JetBrains Mono,monospace';ctx.textAlign='left';
-      ctx.fillText('COMPRESSÃO '+(ultimaCompressao*100).toFixed(0)+'%', barX+4, barY+barH-1);
-    }
+  // Barra de compressão simplificada
+  previsaoRosa = predictRosa();
+  ultimaCompressao = previsaoRosa.compressao;
+  if(ultimaCompressao>0.35){
+    const barW = (W-12-scaleW-20) * Math.min(1, ultimaCompressao);
+    const barH = 4, barX = 16, barY = G2_CHART_TOP + 5;
+    ctx.fillStyle='rgba(0,0,0,0.3)';
+    ctx.fillRect(barX-2, barY-2, (W-12-scaleW-20)+4, barH+4);
+    ctx.fillStyle='rgba(59,130,246,'+(0.2+ultimaCompressao*0.5)+')';
+    ctx.fillRect(barX, barY, barW, barH);
+    ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='7px JetBrains Mono,monospace';ctx.textAlign='left';
+    ctx.fillText('COMPR '+(ultimaCompressao*100).toFixed(0)+'%', barX+4, barY+barH-1);
   }
 
   // LINHA AUTOMÁTICA DA COTAÇÃO ATUAL REMOVIDA
@@ -2281,88 +2323,60 @@ function aplicarCfgMM(){
   draw();
 }
 
-// Aplicar rodadas direto da topbar
-// ═══════════ INDICADOR DE ENTRADA MM ═══════════
+// ═══════════ ALERTA DE FUNDO DE REVERSÃO ═══════════
+let _alertasDisparados = new Set();
 let fundoDetectado=false, fundoMin=999;
 
-function checkSinalEntrada(emaArr){
-  if(CFG.sinalMMOn===false||emaArr.length<4) return;
-  const n=emaArr.length;
-  const a0=emaArr[n-1], a1=emaArr[n-2], a2=emaArr[n-3];
-  const acima0=a0.e1>a0.e2, acima1=a1.e1>a1.e2, acima2=a2.e1>a2.e2;
+function tocarAlerta(){
+  if(!CFG.alertaAudio) return;
+  try{
+    if(!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=audioCtx.createOscillator();
+    const gain=audioCtx.createGain();
+    osc.connect(gain);gain.connect(audioCtx.destination);
+    osc.type='sine';osc.frequency.setValueAtTime(880,audioCtx.currentTime);
+    osc.frequency.linearRampToValueAtTime(1200,audioCtx.currentTime+0.15);
+    gain.gain.setValueAtTime(0.15,audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0,audioCtx.currentTime+0.3);
+    osc.start(audioCtx.currentTime);osc.stop(audioCtx.currentTime+0.3);
+  }catch(e){}
+}
 
-  // Queda: MM1 cruzou para baixo
-  if(acima2&&acima1&&!acima0){
-    fundoDetectado=true; fundoMin=999;
-  }
-  // Atualiza mínimo durante queda
-  if(fundoDetectado&&pts.length>0){
-    fundoMin=Math.min(fundoMin,pts[pts.length-1].val);
-  }
-  // SINAL: MM1 cruzou de volta para cima após queda real
+function checkSinalEntrada(emaArr){
+  // Mantido para compatibilidade - alerta agora é feito direto no draw()
+  if(!CFG.sinalMMOn||emaArr.length<4) return;
+  const n=emaArr.length;
+  const a0=emaArr[n-1],a1=emaArr[n-2],a2=emaArr[n-3];
+  const acima0=a0.e1>a0.e2,acima1=a1.e1>a1.e2,acima2=a2.e1>a2.e2;
+  if(acima2&&acima1&&!acima0){fundoDetectado=true;fundoMin=999;}
+  if(fundoDetectado&&pts.length>0){fundoMin=Math.min(fundoMin,pts[pts.length-1].val);}
   if(!acima2&&!acima1&&acima0&&fundoDetectado){
     fundoDetectado=false;
     if(pts.length>0) pts[pts.length-1].sinalEntrada=true;
-    showAlert('🚀 SINAL MM — ENTRADA NA PRÓXIMA VELA!','#22c55e',10000);
-    triggerFlash();
+    showAlert('🔻 FUNDO DE REVERSÃO — POSSÍVEL ENTRADA','#22c55e',8000);
+    tocarAlerta();
   }
 }
 
-// ═══════════ COMPRESSÃO E PREVISÃO ROSA (MM2 ADAPTATIVA) ═══════════
-let ultimaCompressao = 0;
-let previsaoRosa = { prob: 0, velas: 0, compressao: 0 };
+// ═══════════ COMPRESSÃO (mantida simplificada) ═══════════
+let ultimaCompressao=0;
+let previsaoRosa={prob:0,velas:0,compressao:0};
 
 function calcCompressao(){
   if(pts.length<8) return 0;
-  const n = Math.min(12, pts.length);
-  const vals = pts.slice(-n).map(p=>p.val);
-  const min = Math.min(...vals);
-  const max = Math.max(...vals);
-  const spread = max - min;
-
-  // spreadScore: 1 quando valores muito colados, 0 quando espalhados
-  const spreadScore = Math.max(0, Math.min(1, 1 - spread/6));
-  // avg proximo de 1x é mais compressão real (não apenas lateralização alta)
-  const avgVal = vals.reduce((a,b)=>a+b,0)/vals.length;
-  const lowScore = Math.max(0, Math.min(1, 1 - (avgVal-1)/5));
-
-  // Tendência: se últimos 3 estão diminuindo amplitude = compressão aumentando
-  let tendScore = 0;
-  if(vals.length>=6){
-    const half = Math.floor(vals.length/2);
-    const spread1 = Math.max(...vals.slice(-half)) - Math.min(...vals.slice(-half));
-    const spread2 = Math.max(...vals.slice(0,half)) - Math.min(...vals.slice(0,half));
-    if(spread2>0) tendScore = Math.max(0, Math.min(1, 1 - spread1/spread2));
-  }
-
-  return Math.min(1, spreadScore*0.5 + lowScore*0.3 + tendScore*0.2);
+  const n=Math.min(12,pts.length);
+  const vals=pts.slice(-n).map(p=>p.val);
+  const min=Math.min(...vals),max=Math.max(...vals);
+  const spread=max-min;
+  return Math.max(0,Math.min(1,1-spread/6));
 }
 
 function predictRosa(){
-  if(pts.length<20) return {prob:0, velas:0, compressao:0};
-  const comp = calcCompressao();
-
-  // Análise histórica: quais compressões precederam >=10x
-  let acertos=0, total=0;
-  for(let i=15; i<pts.length-5; i++){
-    const histVals = pts.slice(Math.max(0,i-10), i).map(p=>p.val);
-    const hMin = Math.min(...histVals);
-    const hMax = Math.max(...histVals);
-    const hSpread = hMax - hMin;
-    const hComp = Math.max(0, Math.min(1, 1 - hSpread/6));
-    if(hComp>0.35){
-      total++;
-      const fut = pts.slice(i, Math.min(i+5, pts.length));
-      if(fut.some(p=>p.val>=10)) acertos++;
-    }
-  }
-  const probHist = total>0 ? acertos/total : 0.15;
-
-  // Prob atual: compressão atual * probabilidade histórica
-  const probAtual = comp>0.4 ? comp * probHist : 0;
-  const velasPrevistas = probAtual>0.45 ? Math.max(1, Math.ceil(5-Math.sqrt(probAtual)*5)) : 0;
-
-  return {prob: probAtual, velas: velasPrevistas, compressao: comp};
+  if(pts.length<20) return {prob:0,velas:0,compressao:0};
+  const comp=calcCompressao();
+  const probAtual=comp>0.4?comp*0.35:0;
+  const velasPrevistas=probAtual>0.45?Math.max(1,Math.ceil(5-Math.sqrt(probAtual)*5)):0;
+  return {prob:probAtual,velas:velasPrevistas,compressao:comp};
 }
 
 let modoRodada=false;
@@ -2533,8 +2547,7 @@ function salvarConfig(){
         mm1On:    CFG.mm1On,  mm1Per: CFG.mm1Per, mm1Cor: CFG.mm1Cor, mm1Op: CFG.mm1Op, mm1Lw: CFG.mm1Lw, mm1Dash: CFG.mm1Dash, mm1Curva: CFG.mm1Curva,
         mm2On:    CFG.mm2On,  mm2Per: CFG.mm2Per, mm2Cor: CFG.mm2Cor, mm2Op: CFG.mm2Op, mm2Lw: CFG.mm2Lw, mm2Dash: CFG.mm2Dash, mm2Curva: CFG.mm2Curva,
         mm3On:    CFG.mm3On,  mm3Per: CFG.mm3Per, mm3Cor: CFG.mm3Cor, mm3Op: CFG.mm3Op, mm3Lw: CFG.mm3Lw, mm3Dash: CFG.mm3Dash, mm3Curva: CFG.mm3Curva,
-        mm2Adaptive: CFG.mm2Adaptive, mm2CompBoost: CFG.mm2CompBoost,
-        sinalMMOn: CFG.sinalMMOn,
+        sinalMMOn: CFG.sinalMMOn, alertaFundo: CFG.alertaFundo,
       },
       rodada: rodadaConfig,
       drawings: drawings,
@@ -2579,10 +2592,6 @@ function carregarConfig(){
     // Atualiza UI do botão MM
     const anyOn = CFG.mm1On||CFG.mm2On||CFG.mm3On;
     document.getElementById('maBtn')?.classList.toggle('on', anyOn);
-
-    // Restaura checkbox MM2 adaptativa
-    const cbMM2 = document.getElementById('sinalMM2Adaptive');
-    if(cbMM2) cbMM2.checked = CFG.mm2Adaptive!==false;
 
     // Atualiza slider
     const sl = document.getElementById('xslider');
