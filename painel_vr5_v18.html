@@ -570,7 +570,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-famil
       &bull; Requer subida confirmada após o fundo<br>
       &bull; <b>Sem alertas falsos</b> durante lateralização<br>
       <label style="display:flex;align-items:center;gap:6px;margin-top:6px">
-        <input type="checkbox" id="sinalMMOn" checked onchange="CFG.sinalMMOn=this.checked;salvarConfig()">
+        <input type="checkbox" id="sinalMMOn" checked disabled title="Configuração travada">
         <span>Ativar alertas de fundo de reversão</span>
       </label>
     </div>
@@ -582,7 +582,7 @@ html,body{height:100%;width:100%;overflow:hidden;background:var(--bg);font-famil
       &bull; Alerta sonoro ao cruzar um fundo real<br>
       &bull; Sem alertas falsos: confirma queda + subida<br>
       <label style="display:flex;align-items:center;gap:6px;margin-top:6px">
-        <input type="checkbox" id="sinalMM2Adaptive" checked onchange="CFG.mm2Adaptive=this.checked;salvarConfig();draw()">
+        <input type="checkbox" id="sinalMM2Adaptive" checked disabled title="Configuração travada">
         <span>Ativar MM2 adaptativa (calibração por compressão)</span>
       </label>
     </div>
@@ -2950,18 +2950,43 @@ function aplicarRodadas(){
 // CONFIGURAÇÃO TRAVADA — médias móveis fixas, nunca sobrescrever
 // Estes valores são o padrão definitivo do painel e NÃO mudam.
 // ═══════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
+// CONFIGURAÇÃO PERMANENTEMENTE TRAVADA — usa Object.defineProperty
+// Nenhum código, localStorage, modal ou reset pode mudar estes valores
+// ═══════════════════════════════════════════════════════════════════
 const CFG_MM_LOCKED = {
-  showMA:   true,
-  mm1On:    true,  mm1Per: 9,  mm1Cor: '#f59e0b', mm1Op: 0.90, mm1Lw: 1.8, mm1Dash: [4,5],  mm1Curva: 'smooth',
-  mm2On:    true,  mm2Per: 14, mm2Cor: '#3b82f6', mm2Op: 0.85, mm2Lw: 1.5, mm2Dash: [6,4],  mm2Curva: 'linear',
-  mm3On:    true,  mm3Per: 34, mm3Cor: '#22c55e', mm3Op: 0.75, mm3Lw: 1.6, mm3Dash: [0,0],  mm3Curva: 'smooth',
-  mm2Adaptive: true, mm2CompBoost: 1.0,
-  sinalMMOn: true,
+  showMA:true, sinalMMOn:true,
+  mm1On:true, mm1Per:9,  mm1Cor:'#f59e0b', mm1Op:0.90, mm1Lw:1.8, mm1Dash:[4,5], mm1Curva:'smooth',
+  mm2On:true, mm2Per:14, mm2Cor:'#3b82f6', mm2Op:0.85, mm2Lw:1.5, mm2Dash:[6,4], mm2Curva:'linear',
+  mm3On:true, mm3Per:34, mm3Cor:'#22c55e', mm3Op:0.75, mm3Lw:1.6, mm3Dash:[0,0], mm3Curva:'smooth',
+  mm2Adaptive:true, mm2CompBoost:1.0,
+  fundoJanela:8, fundoLimiarQueda:3, fundoGrandeMin:4,
 };
 
-function aplicarCfgTravada(){
-  Object.assign(CFG, CFG_MM_LOCKED);
-}
+// Congela cada propriedade travada com getter imutável
+(function _travarCFG(){
+  Object.keys(CFG_MM_LOCKED).forEach(k => {
+    const val = CFG_MM_LOCKED[k];
+    Object.defineProperty(CFG, k, {
+      get(){ return Array.isArray(val) ? [...val] : val; },
+      set(){ /* silenciosamente ignora qualquer tentativa de mudança */ },
+      configurable: false,
+      enumerable: true
+    });
+  });
+  // Limpa qualquer valor antigo do localStorage que possa ter estas chaves
+  try{
+    const raw = localStorage.getItem('aviator_v7_cfg');
+    if(raw){
+      const d = JSON.parse(raw);
+      if(d.cfg){ Object.keys(CFG_MM_LOCKED).forEach(k=>delete d.cfg[k]); }
+      localStorage.setItem('aviator_v7_cfg', JSON.stringify(d));
+    }
+    localStorage.removeItem('vr5_mm_preset');
+  }catch(_){}
+})();
+
+function aplicarCfgTravada(){ /* já travado via defineProperty — não precisa fazer nada */ }
 
 // ═══════════ PERSISTÊNCIA — localStorage ═══════════
 const STORAGE_KEY = 'aviator_v7_cfg';
@@ -2990,34 +3015,27 @@ function salvarConfig(){
 
 function carregarConfig(){
   try{
-    // Sempre aplica as configs de MM travadas PRIMEIRO
-    aplicarCfgTravada();
-
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return;
-    const dados = JSON.parse(raw);
-
-    // Restaura APENAS showN — nunca sobrescreve as MMs
-    if(dados.cfg && dados.cfg.showN){
-      CFG.showN = Math.max(10, parseInt(dados.cfg.showN)||60);
+    if(raw){
+      const dados = JSON.parse(raw);
+      // Restaura APENAS showN — nada de MM
+      if(dados.cfg && dados.cfg.showN){
+        CFG.showN = Math.max(10, parseInt(dados.cfg.showN)||60);
+      }
+      // Restaura rodadaConfig
+      if(dados.rodada) Object.assign(rodadaConfig, dados.rodada);
+      // Restaura desenhos/marcações
+      if(Array.isArray(dados.drawings)) drawings = dados.drawings;
+      // Restaura servidor
+      if(dados.servidor) Object.assign(srv, dados.servidor);
     }
 
-    // Restaura rodadaConfig
-    if(dados.rodada) Object.assign(rodadaConfig, dados.rodada);
-
-    // Restaura desenhos/marcações
-    if(Array.isArray(dados.drawings)) drawings = dados.drawings;
-
-    // Restaura servidor
-    if(dados.servidor) Object.assign(srv, dados.servidor);
-
-    // Atualiza UI do botão MM
-    const anyOn = CFG.mm1On||CFG.mm2On||CFG.mm3On;
-    document.getElementById('maBtn')?.classList.toggle('on', anyOn);
-
-    // Restaura checkbox MM2 adaptativa
+    // Força UI sempre mostrando MM ativas (travadas)
+    document.getElementById('maBtn')?.classList.add('on');
     const cbMM2 = document.getElementById('sinalMM2Adaptive');
-    if(cbMM2) cbMM2.checked = CFG.mm2Adaptive!==false;
+    if(cbMM2){ cbMM2.checked = true; cbMM2.disabled = true; }
+    const cbSinal = document.getElementById('sinalMMOn');
+    if(cbSinal){ cbSinal.checked = true; cbSinal.disabled = true; }
 
     // Atualiza slider
     const sl = document.getElementById('xslider');
