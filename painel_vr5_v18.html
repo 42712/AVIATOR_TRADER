@@ -1360,7 +1360,13 @@ function voltarPresente(){
   draw();
   if(window._updateScrollBars){ window._updateScrollBars(); }
 }
-function toggleMA(){ CFG.showMA=!CFG.showMA; document.getElementById('maBtn').classList.toggle('on',CFG.showMA); draw(); }
+function toggleMA(){ 
+  // MMs são travadas — sempre ativas
+  aplicarCfgTravada();
+  CFG.showMA = true;
+  document.getElementById('maBtn').classList.add('on');
+  draw();
+}
 function resetPainelCompleto(){
   localStorage.removeItem(HISTORY_KEY);
   viewOffset = 0;
@@ -2576,10 +2582,8 @@ function closeIndicadores(){ document.getElementById('indModal').classList.remov
 function closeThenOpenMM(){ closeIndicadores(); openCfgMM(); }
 
 function resetCfgMM(){
-  CFG.mm1On=true;  CFG.mm1Per=9;  CFG.mm1Cor='#f59e0b'; CFG.mm1Op=0.90; CFG.mm1Lw=1.8; CFG.mm1Dash=[4,5]; CFG.mm1Curva='smooth';
-  CFG.mm2On=true;  CFG.mm2Per=14; CFG.mm2Cor='#3b82f6'; CFG.mm2Op=0.85; CFG.mm2Lw=1.5; CFG.mm2Dash=[6,4]; CFG.mm2Curva='linear';
-  CFG.mm3On=true;  CFG.mm3Per=34; CFG.mm3Cor='#22c55e'; CFG.mm3Op=0.75; CFG.mm3Lw=1.6; CFG.mm3Dash=[0,0]; CFG.mm3Curva='smooth';
-  CFG.showMA=true; salvarConfig(); openCfgMM(); draw();
+  aplicarCfgTravada();
+  invalidarCacheMM(); salvarConfig(); openCfgMM(); draw();
 }
 
 function openCfgMM(){
@@ -2595,30 +2599,24 @@ function openCfgMM(){
 function closeCfgMM(){ document.getElementById('mmModal').classList.remove('open'); }
 
 function mmToggle(n){
+  // MMs travadas — sempre ativas
   const el=document.getElementById('mm'+n+'tog');
-  el.classList.toggle('on');
+  if(el) el.classList.add('on');
+  showAlert('⚙ MM travada — configuração fixa','#f59e0b',1800);
 }
 
 function dashFromStr(s){ return s==='solid'?[0,0]:s==='dot'?[2,4]:[4,5]; }
 
 function aplicarCfgMM(){
-  const gv=(id,def,isFloat)=>{const v=document.getElementById(id)?.value;return v?(isFloat?parseFloat(v):parseInt(v)):def;};
-  const gt=(id)=>document.getElementById(id)?.classList.contains('on')??false;
-  const gd=(id)=>dashFromStr(document.getElementById(id)?.value||'dash');
-  const gc=(id)=>document.getElementById(id)?.value||'#ffffff';
-
-  CFG.mm1On=gt('mm1tog'); CFG.mm1Per=gv('mm1per',9); CFG.mm1Cor=gc('mm1cor'); CFG.mm1Op=gv('mm1op',.8,true); CFG.mm1Lw=gv('mm1lw',1.5,true); CFG.mm1Dash=gd('mm1dash'); CFG.mm1Curva=document.getElementById('mm1curva')?.value||'smooth';
-  CFG.mm2On=gt('mm2tog'); CFG.mm2Per=gv('mm2per',21); CFG.mm2Cor=gc('mm2cor'); CFG.mm2Op=gv('mm2op',.55,true); CFG.mm2Lw=gv('mm2lw',1.2,true); CFG.mm2Dash=gd('mm2dash'); CFG.mm2Curva=document.getElementById('mm2curva')?.value||'linear';
-  CFG.mm3On=gt('mm3tog'); CFG.mm3Per=gv('mm3per',50); CFG.mm3Cor=gc('mm3cor'); CFG.mm3Op=gv('mm3op',.5,true); CFG.mm3Lw=gv('mm3lw',1.0,true); CFG.mm3Dash=gd('mm3dash'); CFG.mm3Curva=document.getElementById('mm3curva')?.value||'bezier';
-
-  // Atualiza botão MM na topbar
-  const anyOn=CFG.mm1On||CFG.mm2On||CFG.mm3On;
-  document.getElementById('maBtn').classList.toggle('on', anyOn);
-  CFG.showMA=anyOn;
-  invalidarCacheMM(); // períodos mudaram, recalcula
+  // Configurações de MM são TRAVADAS — ignora qualquer mudança do modal
+  aplicarCfgTravada();
+  document.getElementById('maBtn').classList.toggle('on', true);
+  CFG.showMA = true;
+  invalidarCacheMM();
   salvarConfig();
   closeCfgMM();
   draw();
+  showAlert('⚙ Configuração travada aplicada','#22c55e',2500);
 }
 
 // Aplicar rodadas direto da topbar
@@ -2648,22 +2646,14 @@ function salvarPreset(){
 }
 
 function carregarPreset(){
-  const raw = localStorage.getItem(PRESET_KEY);
-  if(!raw){ showAlert('⚠ Nenhum preset salvo ainda. Clique em SALVAR PRESET primeiro.','#f59e0b',4000); return; }
-  try{
-    const p = JSON.parse(raw);
-    Object.assign(CFG, p);
-    CFG.showMA = CFG.mm1On || CFG.mm2On || CFG.mm3On;
-    invalidarCacheMM();
-    salvarConfig();
-    // Atualiza modal se aberto
-    openCfgMM && (()=>{ try{ openCfgMM(); closeCfgMM(); }catch(_){} })();
-    document.getElementById('maBtn').classList.toggle('on', CFG.showMA);
-    draw();
-    showAlert('✅ Preset das MMs carregado!', '#a855f7', 3000);
-  } catch(e){
-    showAlert('⚠ Erro ao carregar preset', '#f43f5e', 3000);
-  }
+  // Preset também usa sempre as configurações travadas
+  aplicarCfgTravada();
+  CFG.showMA = true;
+  invalidarCacheMM();
+  salvarConfig();
+  document.getElementById('maBtn').classList.add('on');
+  draw();
+  showAlert('✅ Configuração padrão travada carregada!', '#a855f7', 3000);
 }
 
 function togglePreset(){
@@ -2956,6 +2946,23 @@ function aplicarRodadas(){
   showAlert('Rodadas: vela '+vela+' = rodada '+rodada,'#22c55e',3000);
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// CONFIGURAÇÃO TRAVADA — médias móveis fixas, nunca sobrescrever
+// Estes valores são o padrão definitivo do painel e NÃO mudam.
+// ═══════════════════════════════════════════════════════════════════
+const CFG_MM_LOCKED = {
+  showMA:   true,
+  mm1On:    true,  mm1Per: 9,  mm1Cor: '#f59e0b', mm1Op: 0.90, mm1Lw: 1.8, mm1Dash: [4,5],  mm1Curva: 'smooth',
+  mm2On:    true,  mm2Per: 14, mm2Cor: '#3b82f6', mm2Op: 0.85, mm2Lw: 1.5, mm2Dash: [6,4],  mm2Curva: 'linear',
+  mm3On:    true,  mm3Per: 34, mm3Cor: '#22c55e', mm3Op: 0.75, mm3Lw: 1.6, mm3Dash: [0,0],  mm3Curva: 'smooth',
+  mm2Adaptive: true, mm2CompBoost: 1.0,
+  sinalMMOn: true,
+};
+
+function aplicarCfgTravada(){
+  Object.assign(CFG, CFG_MM_LOCKED);
+}
+
 // ═══════════ PERSISTÊNCIA — localStorage ═══════════
 const STORAGE_KEY = 'aviator_v7_cfg';
 const HISTORY_KEY = 'aviator_vr5_historico_tipminer';
@@ -2964,15 +2971,10 @@ function salvarConfig(){
   try{
     const dados = {
       cfg: {
-        showN:    CFG.showN,
-        showMA:   CFG.showMA,
-        mm1On:    CFG.mm1On,  mm1Per: CFG.mm1Per, mm1Cor: CFG.mm1Cor, mm1Op: CFG.mm1Op, mm1Lw: CFG.mm1Lw, mm1Dash: CFG.mm1Dash, mm1Curva: CFG.mm1Curva,
-        mm2On:    CFG.mm2On,  mm2Per: CFG.mm2Per, mm2Cor: CFG.mm2Cor, mm2Op: CFG.mm2Op, mm2Lw: CFG.mm2Lw, mm2Dash: CFG.mm2Dash, mm2Curva: CFG.mm2Curva,
-        mm3On:    CFG.mm3On,  mm3Per: CFG.mm3Per, mm3Cor: CFG.mm3Cor, mm3Op: CFG.mm3Op, mm3Lw: CFG.mm3Lw, mm3Dash: CFG.mm3Dash, mm3Curva: CFG.mm3Curva,
-        mm2Adaptive: CFG.mm2Adaptive, mm2CompBoost: CFG.mm2CompBoost,
-        sinalMMOn: CFG.sinalMMOn,
+        showN: CFG.showN,
+        // NÃO salva configurações de MM — são travadas no código
       },
-      rodada: rodadaConfig,
+      rodada:   rodadaConfig,
       drawings: drawings,
       servidor: {
         url:    srv.url,
@@ -2988,19 +2990,16 @@ function salvarConfig(){
 
 function carregarConfig(){
   try{
+    // Sempre aplica as configs de MM travadas PRIMEIRO
+    aplicarCfgTravada();
+
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return;
     const dados = JSON.parse(raw);
 
-    // Restaura CFG
-    if(dados.cfg){
-      Object.assign(CFG, dados.cfg);
-      // Mantém o painel abrindo com 100 rodadas visíveis para o histórico de pontos
-      CFG.showN = Math.max(10, parseInt(CFG.showN)||60);
-      // Garante que dash seja array
-      ['mm1Dash','mm2Dash','mm3Dash'].forEach(k=>{
-        if(!Array.isArray(CFG[k])) CFG[k]=[4,5];
-      });
+    // Restaura APENAS showN — nunca sobrescreve as MMs
+    if(dados.cfg && dados.cfg.showN){
+      CFG.showN = Math.max(10, parseInt(dados.cfg.showN)||60);
     }
 
     // Restaura rodadaConfig
